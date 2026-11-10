@@ -1,0 +1,48 @@
+# GridSentinel Edge: settings shared by the gateway, the detectors and the dashboard.
+# Values marked "tune" are starting points. Adjust them after your own baseline run.
+
+[project]
+name = "GridSentinel Edge"
+title = "Smart Grid Cyberattack Detection Using AI"
+institution = "CGC University, Mohali"
+department = "Department of Computer Science & Engineering"
+team = ["Shivam Kumar", "Aryan Yadav", "Atul Raj", "Aditya Kumar"]
+guides = ["Mr. Parteek", "Ms. Pooja"]
+
+[gateway]
+host = "0.0.0.0"
+port = 8000
+db_path = "data/gridsentinel.db"
+models_dir = "data/models"
+baseline_path = "data/baseline.json"
+sample_period_s = 0.5      # must match SAMPLE_PERIOD_MS in the firmware
+window_s = 10              # length of the analysis window
+min_samples = 6            # fewer samples than this in a window counts as a missing node
+node_timeout_s = 3.0       # silence longer than this is reported as a lost link
+
+[sensing]
+branch_meter = false      # set to false when only one INA226 is fitted (Node A, on the feeder)
+
+[rules]
+v_min = 10.5               # tune: plausible range of the 12 V bus
+v_max = 13.5
+i_max_a = 0.82             # INA226 range with the 0.1 ohm shunt
+max_step_a = 0.15          # tune: largest believable jump between two samples
+max_step_v = 0.8
+z_limit = 4.0              # distance from the baseline mean, in standard deviations
+resid_tol_a = 0.08         # tune: |I_A - I_B - lamp 1 current|
+vgap_tol_v = 0.6           # tune: |INA226 bus voltage - voltage sensor|
+stale_run = 4              # identical readings in a row before data counts as frozen
+late_factor = 2.5          # mean gap between messages, in sample periods
+relay_settle_s = 11.0      # keep a little longer than window_s: the step stays in the window that long
+std_floor_a = 0.004
+std_floor_v = 0.03
+
+[decision]
+clear_windows = 3          # normal windows needed before an alert is cleared
+model_min_proba = 0.7      # Random Forest confidence needed to override the rules
+
+[response]
+buzzer_on_alert = true
+auto_relay_off = false     # switches lamp 2 off, only while an experiment is running
+auto_relay_labels = ["cyber_anomaly"]

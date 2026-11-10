@@ -1,0 +1,10 @@
+# For managed Windows laptops where Application Control blocks brand-new package builds.
+# Use with Python 3.12 (python.org installer) and a fresh venv:  pip install -r requirements-compat.txt
+fastapi==0.115.6
+uvicorn==0.34.0
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.5.2
+joblib==1.4.2
+streamlit==1.41.1
+requests==2.32.3
